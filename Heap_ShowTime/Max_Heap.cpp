@@ -3,38 +3,31 @@
 using namespace std;
 
 class MaxHeap {
+private:
     vector<int> heap;
 
 public:
 
-    // Insert element into Max Heap
+    // Insert element and Heapify Up
     void insert(int value) {
-
-        // Add element at the end
         heap.push_back(value);
 
         int i = heap.size() - 1;
 
-        // Heapify Up
         while (i > 0) {
-
             int parent = (i - 1) / 2;
 
-            // Max Heap property is satisfied
             if (heap[parent] >= heap[i])
                 break;
 
-            // Swap child and parent
             swap(heap[parent], heap[i]);
 
-            // Move upward
             i = parent;
         }
     }
 
     // Return maximum element
     int peek() {
-
         if (heap.empty()) {
             cout << "Heap is empty\n";
             return -1;
@@ -43,29 +36,49 @@ public:
         return heap[0];
     }
 
+    // Heapify Down
+    void heapify(int i) {
+        int n = heap.size();
+
+        while (true) {
+            int largest = i;
+
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+
+            if (left < n && heap[left] > heap[largest])
+                largest = left;
+
+            if (right < n && heap[right] > heap[largest])
+                largest = right;
+
+            if (largest == i)
+                break;
+
+            swap(heap[i], heap[largest]);
+
+            i = largest;
+        }
+    }
+
     // Delete root element
     void deleteRoot() {
-
         if (heap.empty()) {
             cout << "Heap is empty\n";
             return;
         }
 
-        // Move last element to root
         heap[0] = heap.back();
-
-        // Remove last element
         heap.pop_back();
 
-        // Heapify will be added later
+        if (!heap.empty())
+            heapify(0);
     }
 
     // Display heap
     void display() {
-
-        for (int value : heap) {
+        for (int value : heap)
             cout << value << " ";
-        }
 
         cout << endl;
     }
@@ -80,6 +93,7 @@ int main() {
     h.insert(40);
     h.insert(10);
     h.insert(20);
+    h.insert(60);
 
     cout << "Max Heap: ";
     h.display();
@@ -90,6 +104,8 @@ int main() {
 
     cout << "After deleting root: ";
     h.display();
+
+    cout << "New maximum: " << h.peek() << endl;
 
     return 0;
 }
